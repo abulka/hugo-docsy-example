@@ -1,0 +1,4 @@
+{
+    "plantuml.exportOutDir": "static/images/uml",
+    "plantuml.exportSubFolder": false
+}
