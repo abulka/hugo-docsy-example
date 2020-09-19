@@ -1,4 +1,5 @@
-baseURL = "/"
+# baseURL = "/"
+baseURL = "https://abulka.github.io/hugo-docsy-example/"
 title = "Goldydocs"
 publishDir = "docs"
 
