@@ -20,6 +20,8 @@ skinparam backgroundcolor AntiqueWhite/Gold
 
 See colour info https://plantuml.com/color 
 
+from the blog subdir
+
 ![svg your image](/blog/images/fred.svg)
 
 ## what about a png?

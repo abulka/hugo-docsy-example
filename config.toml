@@ -2,6 +2,7 @@
 baseURL = "https://abulka.github.io/hugo-docsy-example/"
 title = "Goldydocs"
 publishDir = "docs"
+canonifyurls = false
 
 enableRobotsTXT = true
 

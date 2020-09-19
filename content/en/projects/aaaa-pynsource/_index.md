@@ -17,9 +17,10 @@ Remember to focus on what the user needs to know, not just what you think is int
 
 # UML
 
-![svg your image](/static/images/uml/"layout and partial structure.svg")
+![png your image](/images/uml/fred-uml.png)
 
-![png your image](/static/images/uml/fred.png)
+![png your image](/blog/images/fred.png)
+
 
 
 # Hey THERE

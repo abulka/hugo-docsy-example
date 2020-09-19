@@ -285,6 +285,7 @@ Hi again&lt;/p&gt;
 &lt;p&gt;but has no backgound unless you specify&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-plantuml&#34; data-lang=&#34;plantuml&#34;&gt;skinparam backgroundcolor AntiqueWhite/Gold
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;See colour info &lt;a href=&#34;https://plantuml.com/color&#34;&gt;https://plantuml.com/color&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;from the blog subdir&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://abulka.github.io/hugo-docsy-example/blog/images/fred.svg&#34; alt=&#34;svg your image&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;what-about-a-png&#34;&gt;what about a png?&lt;/h2&gt;
 &lt;p&gt;from the blog subdir&lt;/p&gt;
