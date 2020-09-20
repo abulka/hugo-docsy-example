@@ -7,6 +7,13 @@ draft: false
 
 this is a post
 
+[back to blog on plantuml and xref stuff]({{< ref "/blog/newcat/on-images" >}} "plantuml and xref stuff")
+
+[xref stuff]({{< ref "/blog/newcat/on-images#links-and-xrefs" >}} "plantuml and xref stuff")
+
+[xref stuff]({{< ref "blog/newcat/on-images#links-and-xrefs" >}} "plantuml and xref stuff")
+
+http://localhost:1313/hugo-docsy-example/blog/2019/01/04/plantuml-images/#links-and-xrefs
 
 # Hey THERE
 

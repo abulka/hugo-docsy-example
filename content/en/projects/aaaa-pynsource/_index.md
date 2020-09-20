@@ -21,7 +21,10 @@ Remember to focus on what the user needs to know, not just what you think is int
 
 ![png your image](/blog/images/fred.png)
 
+shortcode hack versions
 
+![png your image]({{< andy/img "blog/images/fred.png" >}})
+![png your image]({{< andy/img "images/uml/fred-uml.png" >}})
 
 # Hey THERE
 

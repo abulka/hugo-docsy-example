@@ -1,18 +1,127 @@
 
 ---
 title: "Plantuml images"
-linkTitle: "Plantuml images"
+linkTitle: "Plantuml"
 date: 2019-01-04
 description: >
   A short lead description about this content page. Text here can also be **bold** or _italic_ and can even be split over multiple paragraphs.
 ---
 
+## baseURL broken
+
+https://github.com/gohugoio/hugo/issues/5226
+
+You need to set to true to make image links generated with full path incl. the 'hugo-docsy-example' sub-path 
+```toml
+canonifyurls = true
+```
+
+For example these images will not render unless canonifyurls is true cos the subpath of the baseURL is not generated for assets - thus is relevant for deploying to github project pages
+![png your image](/blog/images/fred.png)
+![png your image](/images/uml/fred-uml.png)
+but its a bit ugly having to turn canonifyurls on because all the links in the website become long, absolute.
+
+Gee this is needed also for previewing locally! WTF
+but https://discourse.gohugo.io/t/solved-generate-wrong-image-relative-url/11726 says:
+> The baseURL config doesn’t affect links set in markdown.
+
+### Andy's shortcode hack
+You can refer to images in html files using `RelPermalink` but for markdown files which don't allow such templating, we have to encapsulate the trick into a shortcode fragment
+```html
+{{ .Get 0 | absURL }}
+```
+
+E.g. trying to add a shortccodes to image urls can be the solution (no leading /, either viz `images/...` not `/images/...`)
+This workaround trick seems to survive turning canonifyurls off.
+
+![png your image]({{< andy/img "blog/images/fred.png" >}})
+![png your image]({{< andy/img "images/uml/fred-uml.png" >}})
+
+Note: trying to fiddle with my shortcode and get a relpermalink into it has been abandoned
+```html
+{{ $url := .Get 0 | absURL }}
+{{/* $url = $url.RelPermalink */}}
+{{/* {{ $url = .RelPermalink }} */}}
+{{ $url }}
+```
+
+### leaving off the slash
+leaving off the leading / on image references as recommended [here](https://github.com/gohugoio/hugo/issues/5736) is not the solution either because the images don't show up in development server mode, nor does the right url get generated when you generate the static site
+
+![png your image](blog/images/fred.png)
+![png your image](images/uml/fred-uml.png)
+
+e.g.
+
+```
+relative to blog/... unless you put the /blog in there you get
+http://localhost:1313/   blog/2019/01/04/plantuml-images/blog/images/fred.png 404 (Not Found)
+
+with the /blog you get the correct
+http://localhost:1313/   blog/images/fred.png
+
+viz.
+
+bad urls generated:
+<img src="/blog/images/fred.png" alt="png your image">
+<img src="/images/uml/fred-uml.png" alt="png your image">
+
+leaving off the leading / on image references is not the solution either
+<img src="blog/images/fred.png" alt="png your image">
+<img src="images/uml/fred-uml.png" alt="png your image">
+
+```
+
+
+## Experiments with page variables
+
+<!-- {{ .RelPermalink }} -->
+your site's url is {{< andy/siteurl >}} hi `there` andy.
+
+your site's url is
+```
+{{< andy/siteurl >}}
+```
+
+The `.Page.RelPermalink` and `.Page.Permalink` are
+```
+{{< andy/rel_permalink >}}
+{{< andy/permalink >}}
+```
+
+# links and xrefs
+
+all these are correctly output - either absolute or relative links get the correct path from the baseUrl inserted
+
+[pynsource dir]({{< ref "/projects/aaaa-pynsource/" >}} "About Us")
+
+[pynsource info]({{< ref "some-info" >}} "some-info")
+
+[pynsource info]({{< ref "some-info.md" >}} "some-info")
+
+[pynsource info]({{< relref "/projects/aaaa-pynsource/some-info.md" >}} "some-info")
+
+[pynsource info]({{< relref "projects/aaaa-pynsource/some-info.md" >}} "some-info")
+
+viz.
+```
+<p><a href="https://abulka.github.io/hugo-docsy-example/projects/aaaa-pynsource/" title="About Us">pynsource dir</a></p>
+<p><a href="https://abulka.github.io/hugo-docsy-example/projects/aaaa-pynsource/some-info/" title="some-info">pynsource info</a></p>
+<p><a href="https://abulka.github.io/hugo-docsy-example/projects/aaaa-pynsource/some-info/" title="some-info">pynsource info</a></p>
+<p><a href="/hugo-docsy-example/projects/aaaa-pynsource/some-info/" title="some-info">pynsource info</a></p>
+<p><a href="/hugo-docsy-example/projects/aaaa-pynsource/some-info/" title="some-info">pynsource info</a></p>
+```
+
+
+http://localhost:1313/projects/aaaa-pynsource/
+
+http://localhost:1313/projects/aaaa-pynsource/some-info/
 
 # ANDY IMAGES
 
 ## svg is ok
 
-but has no backgound unless you specify
+but has no background unless you specify
 
 ```plantuml
 skinparam backgroundcolor AntiqueWhite/Gold
@@ -24,11 +133,17 @@ from the blog subdir
 
 ![svg your image](/blog/images/fred.svg)
 
+__shortcode hack version:__
+![png your image]({{< andy/img "blog/images/fred.svg" >}})
+
 ## what about a png?
 
 from the blog subdir
 
 ![png your image](/blog/images/fred.png)
+
+__shortcode hack version:__
+![png your image]({{< andy/img "blog/images/fred.png" >}})
 
 ## serve from static dir
 
@@ -36,6 +151,9 @@ from a common dir in `/static` - note that you don't
 need to specify the `/static` part of the path, just the subdir path.
 
 ![png your image](/images/uml/fred-uml.png)
+
+__shortcode hack version:__
+![png your image]({{< andy/img "images/uml/fred-uml.png" >}})
 
 remember to set the out path of plantuml vscode plugin to `static/images/uml/`
 
@@ -58,9 +176,20 @@ So you need to specify a long path into the static dir - related to where your *
 
 ![png your image](/images/uml/content/en/blog/newcat/uml/test-uml.png)
 
-# Usual content
+
+__shortcode hack version:__
+![png your image]({{< andy/img "images/uml/content/en/blog/newcat/uml/test-uml.png" >}})
 
 
+
+
+
+
+
+
+
+
+## Usual content
 
 Text can be **bold**, _italic_, or ~~strikethrough~~. [Links](https://github.com) should be blue with no underlines (unless hovered over).
 

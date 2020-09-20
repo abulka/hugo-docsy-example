@@ -23,6 +23,10 @@
         
         
         &lt;p&gt;this is a post&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://abulka.github.io/hugo-docsy-example/blog/2019/01/04/plantuml-images/&#34; title=&#34;plantuml and xref stuff&#34;&gt;back to blog on plantuml and xref stuff&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://abulka.github.io/hugo-docsy-example/blog/2019/01/04/plantuml-images/#links-and-xrefs&#34; title=&#34;plantuml and xref stuff&#34;&gt;xref stuff&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://abulka.github.io/hugo-docsy-example/blog/2019/01/04/plantuml-images/#links-and-xrefs&#34; title=&#34;plantuml and xref stuff&#34;&gt;xref stuff&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;http://localhost:1313/hugo-docsy-example/blog/2019/01/04/plantuml-images/#links-and-xrefs&lt;/p&gt;
 &lt;h1 id=&#34;hey-there&#34;&gt;Hey THERE&lt;/h1&gt;
 &lt;p&gt;this is a standalone page.
 this is a standalone page.

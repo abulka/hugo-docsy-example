@@ -22,20 +22,100 @@
       <description>
         
         
-        &lt;h1 id=&#34;andy-images&#34;&gt;ANDY IMAGES&lt;/h1&gt;
+        &lt;h2 id=&#34;baseurl-broken&#34;&gt;baseURL broken&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/gohugoio/hugo/issues/5226&#34;&gt;https://github.com/gohugoio/hugo/issues/5226&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;You need to set to true to make image links generated with full path incl. the &amp;lsquo;hugo-docsy-example&amp;rsquo; sub-path&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-toml&#34; data-lang=&#34;toml&#34;&gt;&lt;span style=&#34;color:#000&#34;&gt;canonifyurls&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For example these images will not render unless canonifyurls is true cos the subpath of the baseURL is not generated for assets - thus is relevant for deploying to github project pages
+&lt;img src=&#34;https://abulka.github.io/hugo-docsy-example/blog/images/fred.png&#34; alt=&#34;png your image&#34;&gt;
+&lt;img src=&#34;https://abulka.github.io/hugo-docsy-example/images/uml/fred-uml.png&#34; alt=&#34;png your image&#34;&gt;
+but its a bit ugly having to turn canonifyurls on because all the links in the website become long, absolute.&lt;/p&gt;
+&lt;p&gt;Gee this is needed also for previewing locally! WTF
+but &lt;a href=&#34;https://discourse.gohugo.io/t/solved-generate-wrong-image-relative-url/11726&#34;&gt;https://discourse.gohugo.io/t/solved-generate-wrong-image-relative-url/11726&lt;/a&gt; says:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The baseURL config doesn’t affect links set in markdown.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;andys-shortcode-hack&#34;&gt;Andy&amp;rsquo;s shortcode hack&lt;/h3&gt;
+&lt;p&gt;You can refer to images in html files using &lt;code&gt;RelPermalink&lt;/code&gt; but for markdown files which don&amp;rsquo;t allow such templating, we have to encapsulate the trick into a shortcode fragment&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;{{ .Get 0 | absURL }}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;E.g. trying to add a shortccodes to image urls can be the solution (no leading /, either viz &lt;code&gt;images/...&lt;/code&gt; not &lt;code&gt;/images/...&lt;/code&gt;)
+This workaround trick seems to survive turning canonifyurls off.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://abulka.github.io/hugo-docsy-example/blog/images/fred.png
+&#34; alt=&#34;png your image&#34;&gt;
+&lt;img src=&#34;https://abulka.github.io/hugo-docsy-example/images/uml/fred-uml.png
+&#34; alt=&#34;png your image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Note: trying to fiddle with my shortcode and get a relpermalink into it has been abandoned&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;{{ $url := .Get 0 | absURL }}
+{{/* $url = $url.RelPermalink */}}
+{{/* {{ $url = .RelPermalink }} */}}
+{{ $url }}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;leaving-off-the-slash&#34;&gt;leaving off the slash&lt;/h3&gt;
+&lt;p&gt;leaving off the leading / on image references as recommended &lt;a href=&#34;https://github.com/gohugoio/hugo/issues/5736&#34;&gt;here&lt;/a&gt; is not the solution either because the images don&amp;rsquo;t show up in development server mode, nor does the right url get generated when you generate the static site&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;blog/images/fred.png&#34; alt=&#34;png your image&#34;&gt;
+&lt;img src=&#34;images/uml/fred-uml.png&#34; alt=&#34;png your image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;e.g.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;relative to blog/... unless you put the /blog in there you get
+http://localhost:1313/   blog/2019/01/04/plantuml-images/blog/images/fred.png 404 (Not Found)
+
+with the /blog you get the correct
+http://localhost:1313/   blog/images/fred.png
+
+viz.
+
+bad urls generated:
+&amp;lt;img src=&amp;quot;/blog/images/fred.png&amp;quot; alt=&amp;quot;png your image&amp;quot;&amp;gt;
+&amp;lt;img src=&amp;quot;/images/uml/fred-uml.png&amp;quot; alt=&amp;quot;png your image&amp;quot;&amp;gt;
+
+leaving off the leading / on image references is not the solution either
+&amp;lt;img src=&amp;quot;blog/images/fred.png&amp;quot; alt=&amp;quot;png your image&amp;quot;&amp;gt;
+&amp;lt;img src=&amp;quot;images/uml/fred-uml.png&amp;quot; alt=&amp;quot;png your image&amp;quot;&amp;gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;experiments-with-page-variables&#34;&gt;Experiments with page variables&lt;/h2&gt;
+&lt;!-- {{ .RelPermalink }} --&gt;
+&lt;p&gt;your site&amp;rsquo;s url is https://abulka.github.io/hugo-docsy-example/ hi &lt;code&gt;there&lt;/code&gt; andy.&lt;/p&gt;
+&lt;p&gt;your site&amp;rsquo;s url is&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;https://abulka.github.io/hugo-docsy-example/
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;.Page.RelPermalink&lt;/code&gt; and &lt;code&gt;.Page.Permalink&lt;/code&gt; are&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/hugo-docsy-example/blog/2019/01/04/plantuml-images/
+https://abulka.github.io/hugo-docsy-example/blog/2019/01/04/plantuml-images/
+&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&#34;links-and-xrefs&#34;&gt;links and xrefs&lt;/h1&gt;
+&lt;p&gt;all these are correctly output - either absolute or relative links get the correct path from the baseUrl inserted&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://abulka.github.io/hugo-docsy-example/projects/aaaa-pynsource/&#34; title=&#34;About Us&#34;&gt;pynsource dir&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://abulka.github.io/hugo-docsy-example/projects/aaaa-pynsource/some-info/&#34; title=&#34;some-info&#34;&gt;pynsource info&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://abulka.github.io/hugo-docsy-example/projects/aaaa-pynsource/some-info/&#34; title=&#34;some-info&#34;&gt;pynsource info&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://abulka.github.io/hugo-docsy-example/hugo-docsy-example/projects/aaaa-pynsource/some-info/&#34; title=&#34;some-info&#34;&gt;pynsource info&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://abulka.github.io/hugo-docsy-example/hugo-docsy-example/projects/aaaa-pynsource/some-info/&#34; title=&#34;some-info&#34;&gt;pynsource info&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;viz.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;p&amp;gt;&amp;lt;a href=&amp;quot;https://abulka.github.io/hugo-docsy-example/projects/aaaa-pynsource/&amp;quot; title=&amp;quot;About Us&amp;quot;&amp;gt;pynsource dir&amp;lt;/a&amp;gt;&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;&amp;lt;a href=&amp;quot;https://abulka.github.io/hugo-docsy-example/projects/aaaa-pynsource/some-info/&amp;quot; title=&amp;quot;some-info&amp;quot;&amp;gt;pynsource info&amp;lt;/a&amp;gt;&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;&amp;lt;a href=&amp;quot;https://abulka.github.io/hugo-docsy-example/projects/aaaa-pynsource/some-info/&amp;quot; title=&amp;quot;some-info&amp;quot;&amp;gt;pynsource info&amp;lt;/a&amp;gt;&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;&amp;lt;a href=&amp;quot;/hugo-docsy-example/projects/aaaa-pynsource/some-info/&amp;quot; title=&amp;quot;some-info&amp;quot;&amp;gt;pynsource info&amp;lt;/a&amp;gt;&amp;lt;/p&amp;gt;
+&amp;lt;p&amp;gt;&amp;lt;a href=&amp;quot;/hugo-docsy-example/projects/aaaa-pynsource/some-info/&amp;quot; title=&amp;quot;some-info&amp;quot;&amp;gt;pynsource info&amp;lt;/a&amp;gt;&amp;lt;/p&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;http://localhost:1313/projects/aaaa-pynsource/&lt;/p&gt;
+&lt;p&gt;http://localhost:1313/projects/aaaa-pynsource/some-info/&lt;/p&gt;
+&lt;h1 id=&#34;andy-images&#34;&gt;ANDY IMAGES&lt;/h1&gt;
 &lt;h2 id=&#34;svg-is-ok&#34;&gt;svg is ok&lt;/h2&gt;
-&lt;p&gt;but has no backgound unless you specify&lt;/p&gt;
+&lt;p&gt;but has no background unless you specify&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-plantuml&#34; data-lang=&#34;plantuml&#34;&gt;skinparam backgroundcolor AntiqueWhite/Gold
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;See colour info &lt;a href=&#34;https://plantuml.com/color&#34;&gt;https://plantuml.com/color&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;from the blog subdir&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://abulka.github.io/hugo-docsy-example/blog/images/fred.svg&#34; alt=&#34;svg your image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;shortcode hack version:&lt;/strong&gt;
+&lt;img src=&#34;https://abulka.github.io/hugo-docsy-example/blog/images/fred.svg
+&#34; alt=&#34;png your image&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;what-about-a-png&#34;&gt;what about a png?&lt;/h2&gt;
 &lt;p&gt;from the blog subdir&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://abulka.github.io/hugo-docsy-example/blog/images/fred.png&#34; alt=&#34;png your image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;shortcode hack version:&lt;/strong&gt;
+&lt;img src=&#34;https://abulka.github.io/hugo-docsy-example/blog/images/fred.png
+&#34; alt=&#34;png your image&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;serve-from-static-dir&#34;&gt;serve from static dir&lt;/h2&gt;
 &lt;p&gt;from a common dir in &lt;code&gt;/static&lt;/code&gt; - note that you don&amp;rsquo;t
 need to specify the &lt;code&gt;/static&lt;/code&gt; part of the path, just the subdir path.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://abulka.github.io/hugo-docsy-example/images/uml/fred-uml.png&#34; alt=&#34;png your image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;shortcode hack version:&lt;/strong&gt;
+&lt;img src=&#34;https://abulka.github.io/hugo-docsy-example/images/uml/fred-uml.png
+&#34; alt=&#34;png your image&#34;&gt;&lt;/p&gt;
 &lt;p&gt;remember to set the out path of plantuml vscode plugin to &lt;code&gt;static/images/uml/&lt;/code&gt;&lt;/p&gt;
 &lt;h2 id=&#34;local-uml-dir&#34;&gt;local uml dir&lt;/h2&gt;
 &lt;p&gt;you can keep uml &lt;code&gt;.wsd&lt;/code&gt; files anywhere so how about in a subdir within the blog area you are writing for - they still get exported to a common place though.&lt;/p&gt;
@@ -54,7 +134,10 @@ need to specify the &lt;code&gt;/static&lt;/code&gt; part of the path, just the 
 &lt;p&gt;So you need to specify a long path into the static dir - related to where your &lt;em&gt;original&lt;/em&gt; source code lives e.g.
 &lt;code&gt;/images/uml/content/en/blog/newcat/uml/test-uml.png&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://abulka.github.io/hugo-docsy-example/images/uml/content/en/blog/newcat/uml/test-uml.png&#34; alt=&#34;png your image&#34;&gt;&lt;/p&gt;
-&lt;h1 id=&#34;usual-content&#34;&gt;Usual content&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;shortcode hack version:&lt;/strong&gt;
+&lt;img src=&#34;https://abulka.github.io/hugo-docsy-example/images/uml/content/en/blog/newcat/uml/test-uml.png
+&#34; alt=&#34;png your image&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;usual-content&#34;&gt;Usual content&lt;/h2&gt;
 &lt;p&gt;Text can be &lt;strong&gt;bold&lt;/strong&gt;, &lt;em&gt;italic&lt;/em&gt;, or &lt;del&gt;strikethrough&lt;/del&gt;. &lt;a href=&#34;https://github.com&#34;&gt;Links&lt;/a&gt; should be blue with no underlines (unless hovered over).&lt;/p&gt;
 &lt;p&gt;There should be whitespace between paragraphs. There should be whitespace between paragraphs. There should be whitespace between paragraphs. There should be whitespace between paragraphs.&lt;/p&gt;
 &lt;p&gt;There should be whitespace between paragraphs. There should be whitespace between paragraphs. There should be whitespace between paragraphs. There should be whitespace between paragraphs.&lt;/p&gt;
