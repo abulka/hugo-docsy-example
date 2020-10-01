@@ -1,7 +1,7 @@
 
 ---
-title: "Plantuml images"
-linkTitle: "Plantuml"
+title: "on-images"
+linkTitle: "Plantuml Images Baby"
 date: 2019-01-04
 description: >
   A short lead description about this content page. Text here can also be **bold** or _italic_ and can even be split over multiple paragraphs.
@@ -129,14 +129,14 @@ skinparam backgroundcolor AntiqueWhite/Gold
 
 See colour info https://plantuml.com/color 
 
-from the blog subdir
+## serve from the blog subdir
 
 ![svg your image](/blog/images/fred.svg)
 
 __shortcode hack version:__
 ![png your image]({{< andy/img "blog/images/fred.svg" >}})
 
-## what about a png?
+### what about a png?
 
 from the blog subdir
 
@@ -180,7 +180,21 @@ So you need to specify a long path into the static dir - related to where your *
 __shortcode hack version:__
 ![png your image]({{< andy/img "images/uml/content/en/blog/newcat/uml/test-uml.png" >}})
 
+## docsy theme visualised using my tool
 
+[![svg your image](/images/uml/content/en/blog/newcat/uml/docsy.svg)](/images/uml/content/en/blog/newcat/uml/docsy.svg)
+
+__shortcode hack version:__
+[![svg your image]({{< andy/img "images/uml/content/en/blog/newcat/uml/docsy.svg" >}})]({{< andy/img "images/uml/content/en/blog/newcat/uml/docsy.svg" >}})
+
+## my new 'imgsvg' shortcode attempt 
+it works!
+
+{{< andy/img2 "images/uml/content/en/blog/newcat/uml/docsy.svg" >}}
+just the image
+
+{{< andy/imgsvg "images/uml/content/en/blog/newcat/uml/docsy.svg" >}}
+image with clickable link
 
 
 
